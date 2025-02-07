@@ -1,0 +1,62 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql" // یا هر دیتابیس دیگری که استفاده می‌کنید
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int    @id @default(autoincrement())
+  fullName     String
+  nationalCode String @unique
+  phoneNumber  String
+  password     String
+  roleId       Int
+  role         Role   @relation("RoleUsers", fields: [roleId], references: [id]) // ارتباط با مدل Role
+}
+
+model Role {
+  id          Int    @id @default(autoincrement())
+  name        String @unique
+  permissions Json
+  users       User[] @relation("RoleUsers") // ارتباط معکوس با مدل User
+}
+
+enum RoleEnum {
+  ADMIN
+  USER
+}
+
+model Location {
+  id             Int     @id @default(autoincrement())
+  title          String
+  representative String
+  grade          String
+  major          String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+
+model last_seen {
+  id           Int      @id @default(autoincrement())
+  fullName     String
+  nationalCode String
+  checkin_time DateTime
+}
+
+model Attendance {
+  id           Int      @id @default(autoincrement()) // کلید اصلی با افزایش خودکار
+  nationalCode String   @map("national_code")        // کد ملی
+  firstName    String   @map("first_name")           // نام
+  lastName     String   @map("last_name")            // نام خانوادگی
+  checkinTime  DateTime @map("checkin_time")         // زمان ورود
+  location     String?                               // مکان (می‌تواند اختیاری باشد)
+  createdAt    DateTime @default(now()) @map("created_at") // تاریخ ایجاد رکورد
+
+  @@map("attendance") // نام جدول در پایگاه داده
+}
