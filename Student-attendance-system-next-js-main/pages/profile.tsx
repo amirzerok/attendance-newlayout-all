@@ -39,7 +39,7 @@ const ProfilePage: React.FC = () => {
         const decodedToken = JSON.parse(atob(token.split('.')[1]));
         const nationalCode = decodedToken.nationalCode;
 
-        const response = await fetch(`http://localhost:3001/users/by-national-code/${nationalCode}`, {
+        const response = await fetch(`http://nestjs:3001/users/by-national-code/${nationalCode}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -86,7 +86,7 @@ const ProfilePage: React.FC = () => {
     const token = localStorage.getItem('authToken');
 
     try {
-      const response = await fetch(`http://localhost:3001/users/by-national-code/${userData.nationalCode}`, {
+      const response = await fetch(`http://nestjs:3001/users/by-national-code/${userData.nationalCode}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
