@@ -60,9 +60,9 @@ services:
     networks:
       - mynetwork
 
-  flask-app:
+  pythonserver:
     build:
-      context: ./api-flask-python # مسیر پروژه Flask
+      context: ./faceDetectionWithCamera # مسیر پروژه Flask
     ports:
       - '5000:5000'
     depends_on:
