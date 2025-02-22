@@ -71,7 +71,7 @@ services:
       - mynetwork
     environment:
       FLASK_ENV: development
-    command: python face_detection_api.py
+    command: python server.py
 
   redis:
     image: redis:alpine
