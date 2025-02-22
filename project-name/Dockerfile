@@ -4,8 +4,11 @@ FROM node:18-alpine AS builder
 # تنظیم محیط کار
 WORKDIR /usr/src/app
 
+# نصب `libssl1.1` برای حل مشکل Prisma
+RUN apk add --no-cache openssl1.1-compat
+
 # کپی کردن فایل‌های package.json و package-lock.json
-COPY package*.json ./ 
+COPY package*.json ./
 
 # نصب وابستگی‌ها
 RUN npm install --force
@@ -15,6 +18,9 @@ COPY prisma ./prisma
 
 # کپی کردن سایر فایل‌های پروژه
 COPY . .
+
+# اجرای دستور Prisma برای تولید کلاینت
+RUN npx prisma generate
 
 # ساخت نسخه build از پروژه NestJS
 RUN npm run build
@@ -27,10 +33,13 @@ FROM node:18-alpine
 # تنظیم محیط کار
 WORKDIR /usr/src/app
 
+# نصب `libssl1.1` برای حل مشکل Prisma در محیط اجرا
+RUN apk add --no-cache openssl1.1-compat
+
 # کپی فایل‌های build و وابستگی‌ها از مرحله قبلی
 COPY --from=builder /usr/src/app/node_modules ./node_modules
 COPY --from=builder /usr/src/app/dist ./dist
-COPY --from=builder /usr/src/app/package*.json ./ 
+COPY --from=builder /usr/src/app/package*.json ./
 
 # کپی فایل‌های محیطی
 COPY .env .env
