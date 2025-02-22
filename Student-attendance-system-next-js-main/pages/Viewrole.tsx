@@ -52,7 +52,7 @@ const RoleTable: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/users/role');
+        const response = await axios.get('http://nestjs:3001/users/role');
         const filteredRoles = response.data.map((role: Role) => {
           if (typeof role.permissions === 'string') {
             role.permissions = JSON.parse(role.permissions);
@@ -87,7 +87,7 @@ const RoleTable: React.FC = () => {
 
   const handleDeleteClick = async (id: number) => {
     try {
-      await axios.delete(`http://localhost:3001/users/role/${id}`);
+      await axios.delete(`http://nestjs:3001/users/role/${id}`);
       setRoles(roles.filter(role => role.id !== id));
       showAlert('نقش با موفقیت حذف شد', 'success');
     } catch (error) {
@@ -103,7 +103,7 @@ const RoleTable: React.FC = () => {
   const handleUpdateRole = async () => {
     if (dialogRole) {
       try {
-        await axios.patch(`http://localhost:3001/users/role/${dialogRole.id}`, {
+        await axios.patch(`http://nestjs:3001/users/role/${dialogRole.id}`, {
           name: editedRoleName,
           permissions: dialogRole.permissions,
         });
