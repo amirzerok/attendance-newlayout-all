@@ -46,7 +46,7 @@ const NewLocationPage = () => {
 
   const submitNewLocation = async () => {
     try {
-      const response = await fetch('http://localhost:3001/locations', {
+      const response = await fetch('http://nestjs:3001/locations', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
