@@ -59,7 +59,7 @@ const LocationsTable: React.FC = () => {
   const fetchLocations = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:3001/locations');
+      const response = await fetch('http://nestjs:3001/locations');
       if (!response.ok) {
         throw new Error('خطا در دریافت مکان‌ها');
       }
@@ -120,7 +120,7 @@ const LocationsTable: React.FC = () => {
     if (locationToDelete) {
       try {
         const response = await fetch(
-          `http://localhost:3001/locations/${locationToDelete}`,
+          `http://nestjs:3001/locations/${locationToDelete}`,
           { method: 'DELETE' }
         );
         if (!response.ok) {
@@ -141,7 +141,7 @@ const LocationsTable: React.FC = () => {
       if (updatedLocation) {
         try {
           const response = await fetch(
-            `http://localhost:3001/locations/${locationToSave}`,
+            `http://nestjs:3001/locations/${locationToSave}`,
             {
               method: 'PUT',
               headers: { 'Content-Type': 'application/json' },
