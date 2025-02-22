@@ -42,7 +42,7 @@ const NewLessonPage: React.FC = () => {
 
   const submitNewLesson = async () => {
     try {
-      const response = await fetch('http://localhost:3001/lessons', {
+      const response = await fetch('http://nestjs:3001/lessons', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
