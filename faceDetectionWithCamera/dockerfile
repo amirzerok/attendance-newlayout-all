@@ -23,4 +23,4 @@ COPY . .
 EXPOSE 5000
 
 # دستور اجرای اپلیکیشن Flask
-CMD ["python", "face_detection_api.py"]
+CMD ["python", "server.py"]
