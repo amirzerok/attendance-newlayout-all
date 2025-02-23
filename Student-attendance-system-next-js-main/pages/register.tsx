@@ -69,7 +69,7 @@ const RegisterPage = () => {
   useEffect(() => {
     const fetchRoles = async () => {
       try {
-        const response = await axios.get('http://nestjs:3001/users/role');
+        const response = await axios.get('http://91.107.186.94:3001/users/role');
         setRoles(response.data);
       } catch (error) {
         setAlert({
