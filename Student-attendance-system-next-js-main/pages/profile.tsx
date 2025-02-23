@@ -39,7 +39,7 @@ const ProfilePage: React.FC = () => {
         const decodedToken = JSON.parse(atob(token.split('.')[1]));
         const nationalCode = decodedToken.nationalCode;
 
-        const response = await fetch(`http://nestjs:3001/users/by-national-code/${nationalCode}`, {
+        const response = await fetch(`http://91.107.186.94:3001/users/by-national-code/${nationalCode}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
