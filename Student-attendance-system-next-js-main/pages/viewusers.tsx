@@ -68,7 +68,7 @@ const UsersTable: React.FC = () => {
       try {
         const [usersResponse, rolesResponse] = await Promise.all([
           axios.get('/api/users'),
-          axios.get('http://nestjs:3001/users/role'),
+          axios.get('http://91.107.186.94:3001/users/role'),
         ]);
         setUsers(usersResponse.data);
         setRoles(rolesResponse.data);
