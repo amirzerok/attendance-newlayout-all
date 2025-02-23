@@ -1,7 +1,7 @@
 # استفاده از تصویر سبک پایتون
 FROM python:3.10-slim
 
-# تنظیم یک دایرکتوری کاری در کانتینر
+# تنظیم دایرکتوری کاری
 WORKDIR /app
 
 # نصب ابزارهای موردنیاز برای اجرای OpenCV و دیگر وابستگی‌ها
@@ -27,17 +27,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gfortran \
     && rm -rf /var/lib/apt/lists/*
 
-# نصب نسخه سازگار numpy قبل از نصب OpenCV
-RUN pip install --no-cache-dir numpy==1.23.5
-
-# کپی فایل requirements.txt برای نصب وابستگی‌ها
+# کپی و نصب وابستگی‌ها
 COPY requirements.txt .
-
-# نصب وابستگی‌های پروژه
-RUN pip install --no-cache-dir --no-deps -r requirements.txt
-
-# نصب async_timeout به صورت جداگانه (اختیاری)
-RUN pip install --no-cache-dir async_timeout==4.0.3
+RUN pip install --no-cache-dir -r requirements.txt
 
 # کپی کردن تمام فایل‌های پروژه
 COPY . .
