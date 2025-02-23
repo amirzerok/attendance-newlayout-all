@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import axios, { AxiosError } from 'axios';
 
-const API_URL = 'http://nestjs:3001/users';
+const API_URL = 'http://91.107.186.94:3001/users';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query;
