@@ -59,7 +59,7 @@ const LocationsTable: React.FC = () => {
   const fetchLocations = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://nestjs:3001/locations');
+      const response = await fetch('http://91.107.186.94:3001/locations');
       if (!response.ok) {
         throw new Error('خطا در دریافت مکان‌ها');
       }
