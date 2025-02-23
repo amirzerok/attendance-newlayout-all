@@ -52,7 +52,7 @@ const RoleTable: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://nestjs:3001/users/role');
+        const response = await axios.get('http://91.107.186.94:3001/users/role');
         const filteredRoles = response.data.map((role: Role) => {
           if (typeof role.permissions === 'string') {
             role.permissions = JSON.parse(role.permissions);
