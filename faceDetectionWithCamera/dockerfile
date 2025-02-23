@@ -36,6 +36,9 @@ COPY requirements.txt .
 # نصب وابستگی‌های پروژه
 RUN pip install --no-cache-dir --no-deps -r requirements.txt
 
+# نصب async_timeout به صورت جداگانه (اختیاری)
+RUN pip install --no-cache-dir async_timeout==4.0.3
+
 # کپی کردن تمام فایل‌های پروژه
 COPY . .
 
