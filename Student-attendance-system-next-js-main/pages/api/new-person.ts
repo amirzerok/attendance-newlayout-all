@@ -38,7 +38,7 @@ export default async (req: RequestWithFiles, res: NextApiResponse) => {
         const face = files && files.length > 0 ? files[0].buffer : null;
 
         const response = await axios.post(
-          'http://nestjs:3001/new-person',
+          'http://91.107.186.94:3001/new-person',
           {
             face,
             firstName,
