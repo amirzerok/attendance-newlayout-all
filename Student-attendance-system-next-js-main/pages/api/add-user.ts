@@ -13,7 +13,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       // ارسال درخواست به API Nest.js برای افزودن کاربر
       const response = await axios.post(
-        'http://nestjs:3001/users/add-user',
+        'http://91.107.186.94:3001/users/add-user',
         {
           fullName,
           nationalCode,
