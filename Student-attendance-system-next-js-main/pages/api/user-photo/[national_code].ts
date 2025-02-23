@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import Redis from 'ioredis';
 
 // Initialize Redis client with fallback URL
-const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379');
+const redis = new Redis(process.env.REDIS_URL || 'redis://redis:6379');
 
 export default async function handler(
   req: NextApiRequest,
