@@ -4,8 +4,8 @@ FROM node:18-alpine AS builder
 # تنظیم محیط کار
 WORKDIR /usr/src/app
 
-# نصب `libssl1.1` برای حل مشکل Prisma
-RUN apk add --no-cache openssl1.1-compat
+# نصب `openssl` برای حل مشکل Prisma
+RUN apk add --no-cache openssl
 
 # کپی کردن فایل‌های package.json و package-lock.json
 COPY package*.json ./
@@ -33,8 +33,8 @@ FROM node:18-alpine
 # تنظیم محیط کار
 WORKDIR /usr/src/app
 
-# نصب `libssl1.1` برای حل مشکل Prisma در محیط اجرا
-RUN apk add --no-cache openssl1.1-compat
+# نصب `openssl` برای حل مشکل Prisma در محیط اجرا
+RUN apk add --no-cache openssl
 
 # کپی فایل‌های build و وابستگی‌ها از مرحله قبلی
 COPY --from=builder /usr/src/app/node_modules ./node_modules
