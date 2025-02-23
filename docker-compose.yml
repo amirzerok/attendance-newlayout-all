@@ -12,7 +12,7 @@ services:
       - mynetwork
     environment:
       NEXT_PUBLIC_API_URL: "http://nestjs:3001"
-      NEXT_PUBLIC_PYTHON_API_URL: "http://pythonserver:5000"
+      NEXT_PUBLIC_PYTHON_API_URL: "http://localhost:5000"
 
 
   nestjs:
