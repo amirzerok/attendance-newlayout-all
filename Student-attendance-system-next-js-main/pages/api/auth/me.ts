@@ -8,7 +8,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(401).json({ message: 'Unauthorized' });
     }
 
-    const response = await axios.get('http://nestjs:3001/auth/me', {
+    const response = await axios.get('http://91.107.186.94:3001/auth/me', {
       headers: { Authorization: `Bearer ${token}` },
     });
 
