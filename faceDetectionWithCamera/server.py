@@ -19,7 +19,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 # --------------------- تنظیمات اتصال ---------------------
 # تنظیمات Redis
-redis_client = redis.StrictRedis(host='localhost', port=6379, db=0, decode_responses=True)
+redis_client = redis.StrictRedis(host='redis', port=6379, db=0, decode_responses=True)
 
 # --------------------- تنظیمات Flask و CORS ---------------------
 app = Flask(__name__)
