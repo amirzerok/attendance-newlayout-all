@@ -7,7 +7,7 @@ itsdangerous==2.2.0
 Jinja2==3.1.5
 MarkupSafe==3.0.2
 mysql-connector-python==9.2.0
-numpy==2.2.2
+numpy==1.23.5
 opencv-python==4.5.5.64
 persiantools==5.2.0
 pytz==2025.1
