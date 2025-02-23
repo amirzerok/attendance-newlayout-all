@@ -3,7 +3,7 @@ import mysql from 'mysql2/promise';
 
 // MySQL connection configuration
 const dbConfig = {
-  connectionString: process.env.DATABASE_URL || "mysql://root:@localhost:3306/test"
+  connectionString: process.env.DATABASE_URL || "mysql://root:@mysql:3306/test"
 };
 
 export default async function handler(
