@@ -8,6 +8,9 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     libgl1-mesa-glx \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # کپی فایل requirements.txt برای نصب وابستگی‌ها
