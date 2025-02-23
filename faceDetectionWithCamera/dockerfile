@@ -4,21 +4,37 @@ FROM python:3.10-slim
 # تنظیم یک دایرکتوری کاری در کانتینر
 WORKDIR /app
 
-# نصب ابزارهای ضروری برای اجرای کتابخانه‌ها (در صورت نیاز)
+# نصب ابزارهای موردنیاز برای اجرای OpenCV و دیگر وابستگی‌ها
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
-    libgl1-mesa-glx \
+    cmake \
+    pkg-config \
+    libglib2.0-0 \
     libsm6 \
     libxext6 \
     libxrender-dev \
-    libglib2.0-0 \  
+    libgl1-mesa-glx \
+    libjpeg-dev \
+    libpng-dev \
+    libtiff-dev \
+    libavcodec-dev \
+    libavformat-dev \
+    libswscale-dev \
+    libv4l-dev \
+    libxvidcore-dev \
+    libx264-dev \
+    libatlas-base-dev \
+    gfortran \
     && rm -rf /var/lib/apt/lists/*
+
+# نصب نسخه سازگار numpy قبل از نصب OpenCV
+RUN pip install --no-cache-dir numpy==1.23.5
 
 # کپی فایل requirements.txt برای نصب وابستگی‌ها
 COPY requirements.txt .
 
 # نصب وابستگی‌های پروژه
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --no-deps -r requirements.txt
 
 # کپی کردن تمام فایل‌های پروژه
 COPY . .
@@ -26,5 +42,5 @@ COPY . .
 # باز کردن پورت پیش‌فرض Flask
 EXPOSE 5000
 
-# دستور اجرای اپلیکیشن Flask
+# اجرای اپلیکیشن Flask
 CMD ["python", "server.py"]
