@@ -78,6 +78,7 @@ services:
     volumes:
       - /etc/letsencrypt/archive/webapp.aboutthenetworks.online:/certs  # مسیر گواهی‌نامه‌ها
     command: ["python", "server.py"]
+    restart: always
    
 
   redis:
