@@ -14,8 +14,8 @@ services:
       NEXT_PUBLIC_API_URL: "https://nestjs:3001"
       NEXT_PUBLIC_PYTHON_API_URL: "http://localhost:5000"
     volumes:
-    - /etc/letsencrypt/live/webapp.aboutthenetworks.online:/certs  # گواهینامه‌ها به کانتینر منتقل می‌شود
-  command: ["node", "server.ts"] # اجرای سرور Next.js با HTTPS
+      - /etc/letsencrypt/archive/webapp.aboutthenetworks.online:/certs  # مسیر اصلاح شده
+    command: ["node", "server.ts"]  # اصلاح شده
 
   nestjs:
     build:
