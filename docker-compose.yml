@@ -1,19 +1,21 @@
-
 services:
   nextjs:
     build:
       context: ./Student-attendance-system-next-js-main
     ports:
-      - '3000:3000'
+      - '80:80'     # HTTP ریدایرکت به HTTPS
+      - '443:443'   # اجرای HTTPS روی پورت 443
     depends_on:
       - nestjs
       - mysql
     networks:
       - mynetwork
     environment:
-      NEXT_PUBLIC_API_URL: "http://nestjs:3001"
+      NEXT_PUBLIC_API_URL: "https://nestjs:3001"
       NEXT_PUBLIC_PYTHON_API_URL: "http://localhost:5000"
-
+    volumes:
+      - /etc/letsencrypt/live/webapp.aboutthenetworks.online:/certs  # استفاده از گواهینامه‌های SSL
+    command: ["node", "server.ts"] # اجرای سرور Next.js با HTTPS
 
   nestjs:
     build:
