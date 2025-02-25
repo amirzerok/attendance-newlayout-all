@@ -25,6 +25,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libx264-dev \
     libatlas-base-dev \
     gfortran \
+    openssl \  # اضافه کردن openssl برای SSL
     && rm -rf /var/lib/apt/lists/*
 
 # کپی و نصب وابستگی‌ها
