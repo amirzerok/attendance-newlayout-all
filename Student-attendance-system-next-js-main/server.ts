@@ -10,6 +10,7 @@ const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
+// مسیر گواهینامه‌ها
 const httpsOptions = {
   key: fs.existsSync('/certs/privkey.pem') ? fs.readFileSync('/certs/privkey.pem') : '',
   cert: fs.existsSync('/certs/fullchain.pem') ? fs.readFileSync('/certs/fullchain.pem') : '',
@@ -18,7 +19,7 @@ const httpsOptions = {
 app.prepare().then(() => {
   const server = express();
 
-  // 🚀 1. ریدایرکت HTTP به HTTPS
+  // 🚀 ریدایرکت HTTP به HTTPS
   createHttpServer((req, res) => {
     res.writeHead(301, { Location: `https://${req.headers.host}${req.url}` });
     res.end();
@@ -26,7 +27,7 @@ app.prepare().then(() => {
     console.log('🚀 HTTP Server running on port 80 (Redirecting to HTTPS)');
   });
 
-  // 🚀 2. سرور HTTPS (فقط اجرا می‌شه اگه SSL موجود باشه)
+  // 🚀 اگر گواهینامه‌ها وجود داشت، سرور HTTPS رو اجرا کن
   if (httpsOptions.key && httpsOptions.cert) {
     createServer(httpsOptions, (req: IncomingMessage, res: ServerResponse) => {
       const parsedUrl = parse(req.url || '', true);
@@ -36,5 +37,12 @@ app.prepare().then(() => {
     });
   } else {
     console.error('❌ SSL certificates not found! Make sure Let’s Encrypt is configured.');
+    // در صورتی که SSL موجود نباشد، سرور HTTP رو اجرا کن
+    createHttpServer((req, res) => {
+      const parsedUrl = parse(req.url || '', true);
+      handle(req, res, parsedUrl);
+    }).listen(3000, () => {
+      console.log('❌ Running without SSL on http://localhost:3000');
+    });
   }
 });
