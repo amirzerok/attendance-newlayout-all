@@ -200,7 +200,10 @@ def upload_image():
         logging.error(f"خطا در آپلود تصویر: {e}")
         return jsonify({"status": "error", "message": "خطا در پردازش تصویر"}), 500
 
-ssl_context = ('/path/to/cert.pem', '/path/to/key.pem')  # مسیر گواهی و کلید SSL
+ssl_context = (
+    '/certs/archive/webapp.aboutthenetworks.online/fullchain.pem',  # مسیر گواهی‌نامه
+    '/certs/archive/webapp.aboutthenetworks.online/privkey.pem'    # مسیر کلید
+)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True, ssl_context=ssl_context)
