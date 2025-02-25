@@ -201,8 +201,8 @@ def upload_image():
         return jsonify({"status": "error", "message": "خطا در پردازش تصویر"}), 500
 
 ssl_context = (
-    '/certs/archive/webapp.aboutthenetworks.online/fullchain.pem',  # مسیر گواهی‌نامه
-    '/certs/archive/webapp.aboutthenetworks.online/privkey.pem'    # مسیر کلید
+    '/certs/fullchain.pem',  # مسیر گواهی‌نامه
+    '/certs/privkey.pem'    # مسیر کلید
 )
 
 if __name__ == "__main__":
