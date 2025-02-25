@@ -21,8 +21,14 @@ app.prepare().then(() => {
 
   // 🚀 ریدایرکت HTTP به HTTPS
   createHttpServer((req, res) => {
-    res.writeHead(301, { Location: `https://${req.headers.host}${req.url}` });
-    res.end();
+    // در صورتی که گواهینامه SSL موجود نباشد، ریدایرکت به پورت 3000 انجام می‌شود.
+    if (!httpsOptions.key || !httpsOptions.cert) {
+      res.writeHead(301, { Location: `http://${req.headers.host}${req.url}` });
+      res.end();
+    } else {
+      res.writeHead(301, { Location: `https://${req.headers.host}${req.url}` });
+      res.end();
+    }
   }).listen(80, () => {
     console.log('🚀 HTTP Server running on port 80 (Redirecting to HTTPS)');
   });
