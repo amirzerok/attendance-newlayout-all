@@ -68,14 +68,17 @@ services:
     build:
       context: ./faceDetectionWithCamera
     ports:
-      - '5000:5000'
+      - '5000:5000'  # پورت پایتون
     depends_on:
       - mysql
     networks:
       - mynetwork
     environment:
-      FLASK_ENV: development
-    command: python server.py
+      - FLASK_ENV=production  # یا development بسته به نیاز
+    volumes:
+      - /etc/letsencrypt/archive/webapp.aboutthenetworks.online:/certs  # مسیر گواهی‌نامه‌ها
+    command: ["python", "server.py"]
+    restart: always
 
   redis:
     image: redis:alpine
