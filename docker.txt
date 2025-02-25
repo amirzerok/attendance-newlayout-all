@@ -1,0 +1,86 @@
+docker
+
+git clone https://github.com/amirzerok/attendance-newlayout-all
+
+git clone https://github.com/amirzerok/system-docker-rolebase.git
+
+
+
+cd attendance-newlayout-all
+
+cd system-docker-rolebase
+
+
+
+
+
+create .env file
+
+cd project-name
+
+touch .env
+
+nano .env
+
+
+DATABASE_URL="mysql://user:userpassword@mysql:3306/mydatabase"
+
+
+ تغییر نام فایل‌ها داخل کانتینر:
+
+
+
+docker exec -it attendance-newlayout-all_nextjs_1 sh -c "mv /certs/fullchain1.pem /certs/fullchain.pem && mv /certs/privkey1.pem /certs/privkey.pem"
+
+
+
+
+docker system prune -a
+
+
+docker start system-mysql-1    
+
+docker-compose build --no-cache
+
+docker-compose up --build 
+
+docker-compose up 
+
+docker-compose up -d
+
+
+docker compose down 
+
+
+
+
+prisma 
+
+docker ps
+
+docker exec -it attendance-newlayout-all_nestjs_1 sh
+
+
+npx prisma migrate deploy
+
+
+npx prisma migrate dev --name init
+
+
+
+querry
+
+
+INSERT INTO Role (id, name, permissions) 
+VALUES 
+(1, 'Admin', '{"viewPlaces":true,"editPlaces":true,"deletePlaces":true,"viewPersons":true,"editPersons":true,"deletePersons":true,"viewRoles":true,"editRoles":true,"deleteRoles":true}');
+
+
+
+INSERT INTO User (fullName, nationalCode, phoneNumber, password, roleId) 
+VALUES 
+('amirali hashemipoor', '3381608681', '09369890707', '$2b$12$F.VzTzQhGZ6uXod2oeNUuewqVFL/XiOD/8v47GtTHRleh5CN0ORrO', 1);
+
+
+
+docker exec -it attendance-newlayout-all_nestjs_1 sh
