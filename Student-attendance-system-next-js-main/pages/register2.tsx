@@ -79,7 +79,7 @@ const RegisterForm: React.FC = () => {
   const handleCapturedImageUpload = async (imageData: string) => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:5000/upload', {
+      const response = await fetch('http://91.107.186.94:5000/upload', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
