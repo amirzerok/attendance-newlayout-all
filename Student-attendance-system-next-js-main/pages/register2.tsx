@@ -1,9 +1,21 @@
 import React, { useRef, useState } from 'react';
-import { Container, Box, Paper, Button, Typography, Snackbar, Alert, CircularProgress, TextField, IconButton } from '@mui/material';
+import {
+  Container,
+  Box,
+  Paper,
+  Button,
+  Typography,
+  Snackbar,
+  Alert,
+  CircularProgress,
+  TextField,
+  IconButton,
+} from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import { Upload, ChevronRight, ChevronLeft, X as CloseIcon } from 'lucide-react';
+import Webcam from 'react-webcam';
+import { Upload, ChevronRight, ChevronLeft, X as CloseIcon, Camera } from 'lucide-react';
 
 interface FormInputs {
   fullName: string;
@@ -22,72 +34,87 @@ const RegisterForm: React.FC = () => {
   const [severity, setSeverity] = useState<'success' | 'error'>('success');
   const [loading, setLoading] = useState(false);
   const [identityPhoto, setIdentityPhoto] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [cameraActive, setCameraActive] = useState(false);
+  const webcamRef = useRef<Webcam>(null);
   const router = useRouter();
 
   const { control, handleSubmit, watch } = useForm<FormInputs>();
   const nationalCode = watch('nationalCode');
 
-  const handleIdentityPhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) {
-      setMessage("لطفاً یک فایل تصویر انتخاب کنید.");
-      setSeverity('error');
-      setOpen(true);
-      return;
-    }
+  const videoConstraints = {
+    width: 400,
+    height: 300,
+    facingMode: 'user',
+  };
 
+  // فعال کردن دوربین (نمایش کامپوننت react-webcam)
+  const startCamera = () => {
+    setCameraActive(true);
+  };
+
+  // گرفتن عکس از کامپوننت react-webcam
+  const capturePhoto = () => {
     if (!nationalCode) {
       setMessage("لطفاً ابتدا کد ملی خود را وارد کنید.");
       setSeverity('error');
       setOpen(true);
       return;
     }
-
-    const reader = new FileReader();
-    reader.onloadend = async () => {
-      const imageData = reader.result as string;
-      setIdentityPhoto(imageData);
-      
-      try {
-        setLoading(true);
-        const response = await fetch('http://91.107.186.94:5000/upload', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            image: imageData,
-            nationalCode: nationalCode,
-          }),
-        });
-
-        const result = await response.json();
-
-        if (response.ok && result.status === 'success') {
-          setMessage(result.message || "تصویر با موفقیت تأیید شد!");
-          setSeverity('success');
-        } else {
-          setMessage(result.message || "خطا در تأیید تصویر.");
-          setSeverity('error');
-          setIdentityPhoto(null);
-        }
-      } catch (error) {
-        console.error("Error sending image:", error);
-        setMessage("خطا در ارتباط با سرور.");
+    if (webcamRef.current) {
+      const imageSrc = webcamRef.current.getScreenshot();
+      if (imageSrc) {
+        setIdentityPhoto(imageSrc);
+        setCameraActive(false);
+        // پس از گرفتن عکس، به صورت خودکار تصویر را به سرور ارسال می‌کنیم
+        handleCapturedImageUpload(imageSrc);
+      } else {
+        setMessage("امکان گرفتن عکس وجود ندارد.");
         setSeverity('error');
-        setIdentityPhoto(null);
-      } finally {
-        setLoading(false);
         setOpen(true);
       }
-    };
-    reader.readAsDataURL(file);
+    }
   };
 
+  // ارسال تصویر گرفته شده و کد ملی به روت /upload
+  const handleCapturedImageUpload = async (imageData: string) => {
+    try {
+      setLoading(true);
+      const response = await fetch('http://localhost:5000/upload', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          image: imageData,
+          nationalCode: nationalCode,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.status === 'success') {
+        setMessage(result.message || "تصویر با موفقیت تأیید شد!");
+        setSeverity('success');
+      } else {
+        setMessage(result.message || "خطا در تأیید تصویر.");
+        setSeverity('error');
+        setIdentityPhoto(null);
+      }
+    } catch (error) {
+      console.error("Error sending image:", error);
+      setMessage("خطا در ارتباط با سرور.");
+      setSeverity('error');
+      setIdentityPhoto(null);
+    } finally {
+      setLoading(false);
+      setOpen(true);
+    }
+  };
+
+  // ارسال فرم نهایی ثبت‌نام همراه با تصویر تأیید شده
   const onSubmit = async (data: FormInputs) => {
     if (!identityPhoto) {
-      setMessage("لطفاً تصویر شناسایی خود را آپلود کنید.");
+      setMessage("لطفاً ابتدا تصویر شناسایی خود را بگیرید و آپلود کنید.");
       setSeverity('error');
       setOpen(true);
       return;
@@ -122,7 +149,7 @@ const RegisterForm: React.FC = () => {
 
   const handleNextStep = () => {
     if (step === 1 && !identityPhoto) {
-      setMessage("لطفاً ابتدا تصویر شناسایی خود را آپلود کنید.");
+      setMessage("لطفاً ابتدا تصویر شناسایی خود را بگیرید و آپلود کنید.");
       setSeverity('error');
       setOpen(true);
       return;
@@ -136,7 +163,14 @@ const RegisterForm: React.FC = () => {
 
   const renderStepIndicator = () => (
     <Box sx={{ mb: 4 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', position: 'relative', mb: 2 }}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          position: 'relative',
+          mb: 2,
+        }}
+      >
         {[1, 2].map((number) => (
           <Box
             key={number}
@@ -252,52 +286,77 @@ const RegisterForm: React.FC = () => {
               />
 
               <Typography variant="body1" sx={{ textAlign: 'center', mb: 2 }}>
-                لطفاً تصویر شناسایی خود را آپلود کنید
+                لطفاً تصویر شناسایی خود را بگیرید و آپلود کنید
               </Typography>
-              
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleIdentityPhotoUpload}
-                ref={fileInputRef}
-                style={{ display: 'none' }}
-              />
-              
-              {identityPhoto ? (
-                <Box sx={{ position: 'relative', width: '100%', aspectRatio: '3/4', mb: 2 }}>
-                  <img
-                    src={identityPhoto}
-                    alt="تصویر شناسایی"
+
+              {cameraActive ? (
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <Webcam
+                    audio={false}
+                    ref={webcamRef}
+                    screenshotFormat="image/jpeg"
+                    videoConstraints={videoConstraints}
                     style={{
                       width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
                       borderRadius: 8,
                     }}
                   />
-                  <IconButton
-                    onClick={() => setIdentityPhoto(null)}
-                    sx={{
-                      position: 'absolute',
-                      top: 8,
-                      right: 8,
-                      bgcolor: 'rgba(0,0,0,0.5)',
-                      color: 'white',
-                      '&:hover': { bgcolor: 'rgba(0,0,0,0.7)' },
-                    }}
+                  <Button
+                    variant="contained"
+                    onClick={capturePhoto}
+                    sx={{ width: '100%' }}
+                    startIcon={<Camera />}
                   >
-                    <CloseIcon size={16} />
-                  </IconButton>
+                    عکس بگیر
+                  </Button>
                 </Box>
               ) : (
-                <Button
-                  variant="outlined"
-                  onClick={() => fileInputRef.current?.click()}
-                  startIcon={<Upload />}
-                  sx={{ py: 5, borderStyle: 'dashed' }}
-                >
-                  آپلود تصویر شناسایی
-                </Button>
+                <>
+                  {identityPhoto ? (
+                    <Box sx={{ position: 'relative', width: '100%', aspectRatio: '3/4', mb: 2 }}>
+                      <img
+                        src={identityPhoto}
+                        alt="تصویر شناسایی"
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          borderRadius: 8,
+                        }}
+                      />
+                      <IconButton
+                        onClick={() => setIdentityPhoto(null)}
+                        sx={{
+                          position: 'absolute',
+                          top: 8,
+                          right: 8,
+                          bgcolor: 'rgba(0,0,0,0.5)',
+                          color: 'white',
+                          '&:hover': { bgcolor: 'rgba(0,0,0,0.7)' },
+                        }}
+                      >
+                        <CloseIcon size={16} />
+                      </IconButton>
+                      <Button
+                        variant="outlined"
+                        onClick={startCamera}
+                        startIcon={<Camera />}
+                        sx={{ width: '100%', mt: 2 }}
+                      >
+                        باز کردن دوربین مجدد
+                      </Button>
+                    </Box>
+                  ) : (
+                    <Button
+                      variant="outlined"
+                      onClick={startCamera}
+                      startIcon={<Camera />}
+                      sx={{ py: 5, borderStyle: 'dashed' }}
+                    >
+                      باز کردن دوربین
+                    </Button>
+                  )}
+                </>
               )}
             </Box>
           )}
@@ -361,7 +420,7 @@ const RegisterForm: React.FC = () => {
                 مرحله قبل
               </Button>
             )}
-            
+
             {step < 2 ? (
               <Button
                 variant="contained"
@@ -398,11 +457,7 @@ const RegisterForm: React.FC = () => {
         <Alert
           severity={severity}
           action={
-            <IconButton
-              size="small"
-              color="inherit"
-              onClick={() => setOpen(false)}
-            >
+            <IconButton size="small" color="inherit" onClick={() => setOpen(false)}>
               <CloseIcon size={16} />
             </IconButton>
           }
