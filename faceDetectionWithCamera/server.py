@@ -10,6 +10,7 @@ import os
 import logging
 import boto3
 from botocore.exceptions import NoCredentialsError
+import ssl
 
 # ایجاد پوشه trainer جهت ذخیره مدل در صورت عدم وجود
 os.makedirs("trainer", exist_ok=True)
