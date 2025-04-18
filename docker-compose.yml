@@ -14,7 +14,7 @@ services:
       NEXT_PUBLIC_API_URL: "https://nestjs:3001"
       NEXT_PUBLIC_PYTHON_API_URL: "http://localhost:5000"
     volumes:
-      - /etc/letsencrypt/archive/webapp.aboutthenetworks.online:/certs  # مسیر اصلاح شده
+      - /etc/letsencrypt/archive/a.networklearnzero.shop:/certs  # مسیر اصلاح شده
     command: ["node", "server.ts"]  # اصلاح شده
 
   nestjs:
@@ -76,7 +76,7 @@ services:
     environment:
       - FLASK_ENV=production  # یا development بسته به نیاز
     volumes:
-      - /etc/letsencrypt/archive/webapp.aboutthenetworks.online:/certs  # مسیر گواهی‌نامه‌ها
+      - /etc/letsencrypt/archive/a.networklearnzero.shop:/certs  # مسیر گواهی‌نامه‌ها
     command: ["python", "server.py"]
     restart: always
    
